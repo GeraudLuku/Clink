@@ -5,11 +5,11 @@
 Clink is a minimalist voice recorder app with just the essential features, just enough to be useful.
 
 # Screenshoots
-<img src="/screen_1.png" height="400px"/> <img src="/screen_2.png" height="400px"/>
-<img src="/screen_3.png" height="400px"/><img src="/screen_4.png" height="400px"/>
+<img src="/screnn_1.png" height="400px"/>                <img src="/screen_2.png" height="400px"/>
+<img src="/screen_3.png" height="400px"/>                <img src="/screen_4.png" height="400px"/>
 
 # Download
-<a href="https://play.google.com/store/apps>
+<a href="https://play.google.com/store/apps">
 <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" height="50px"/></a>
 
 ## Contributing
