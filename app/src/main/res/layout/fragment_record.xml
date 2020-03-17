@@ -23,7 +23,8 @@
         app:show_center="true"
         app:show_minutes_progress="true"
         app:minutes_progress_color="@color/colorPrimary"
-        app:show_progress="true" />
+        app:show_progress="true"
+        app:progress_color="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/record_filename"
@@ -56,9 +57,9 @@
 
     <ImageButton
         android:id="@+id/record_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@android:color/transparent"
         android:src="@drawable/record_btn_stopped"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +70,7 @@
         android:id="@+id/record_list_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="@android:color/transparent"
         android:padding="16dp"
         android:src="@drawable/recorder_list_btn"
         app:layout_constraintBottom_toBottomOf="@id/record_btn"

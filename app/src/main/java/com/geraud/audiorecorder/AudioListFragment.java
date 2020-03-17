@@ -39,7 +39,7 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
 
     private AudioListAdapter audioListAdapter;
 
-    private MediaPlayer mediaPlayer = null;
+    private MediaPlayer mediaPlayer;
     private boolean isPlaying = false;
 
     private File fileToPlay = null;
@@ -79,6 +79,15 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                stopAudio();
+                playerHeader.setText("Finished");
+            }
+        });
+
         playerSheet = view.findViewById(R.id.player_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(playerSheet);
         audioList = view.findViewById(R.id.audio_list_view);
@@ -87,50 +96,50 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
         playerHeader = view.findViewById(R.id.player_header_title);
         playerFilename = view.findViewById(R.id.player_filename);
 
-        forwardBtn = view.findViewById(R.id.imageView4);
-        forwardBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pauseAudio();
-                int temp = (int) startTime;
-
-                if ((temp + forwardTime) <= finalTime) {
-                    startTime = startTime + forwardTime;
-                    mediaPlayer.seekTo((int) startTime);
-                    resumeAudio();
-
-                } else {
-                    Log.e("AUDIOLISTFRAGMENT", "Cannot jump forward");
-                }
-            }
-        });
-        backwardBtn = view.findViewById(R.id.imageView3);
-        backwardBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pauseAudio();
-                int temp = (int) startTime;
-
-                if ((temp - backwardTime) > 0) {
-                    startTime = startTime - backwardTime;
-                    mediaPlayer.seekTo((int) startTime);
-                    resumeAudio();
-                } else {
-                    Log.e("AUDIOLISTFRAGMENT", "Cannot jump backwards");
-                }
-            }
-        });
+//        forwardBtn = view.findViewById(R.id.imageView4);
+//        forwardBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                pauseAudio();
+//                int temp = (int) startTime;
+//
+//                if ((temp + forwardTime) <= finalTime) {
+//                    startTime = startTime + forwardTime;
+//                    mediaPlayer.seekTo((int) startTime);
+//                    resumeAudio();
+//
+//                } else {
+//                    Log.e("AUDIOLISTFRAGMENT", "Cannot jump forward");
+//                }
+//            }
+//        });
+//        backwardBtn = view.findViewById(R.id.imageView3);
+//        backwardBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                pauseAudio();
+//                int temp = (int) startTime;
+//
+//                if ((temp - backwardTime) > 0) {
+//                    startTime = startTime - backwardTime;
+//                    mediaPlayer.seekTo((int) startTime);
+//                    resumeAudio();
+//                } else {
+//                    Log.e("AUDIOLISTFRAGMENT", "Cannot jump backwards");
+//                }
+//            }
+//        });
 
         playerSeekbar = view.findViewById(R.id.player_seekbar);
 
-        String path = getActivity().getExternalFilesDir("/").getAbsolutePath();
+        String path = view.getContext().getExternalFilesDir("/").getAbsolutePath();
         File directory = new File(path);
         allFiles = directory.listFiles();
 
         audioListAdapter = new AudioListAdapter(allFiles, this);
 
         audioList.setHasFixedSize(true);
-        audioList.setLayoutManager(new LinearLayoutManager(getContext()));
+        audioList.setLayoutManager(new LinearLayoutManager(view.getContext()));
         audioList.setAdapter(audioListAdapter);
 
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -173,9 +182,11 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                int progress = seekBar.getProgress();
-                mediaPlayer.seekTo(progress);
-                resumeAudio();
+                if (fileToPlay != null) {
+                    int progress = seekBar.getProgress();
+                    mediaPlayer.seekTo(progress);
+                    resumeAudio();
+                }
             }
         });
 
@@ -221,10 +232,10 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
 
     private void playAudio(File fileToPlay) {
 
-        mediaPlayer = new MediaPlayer();
+//        mediaPlayer = new MediaPlayer();
 
-        finalTime = mediaPlayer.getDuration();
-        startTime = mediaPlayer.getCurrentPosition();
+//        finalTime = mediaPlayer.getDuration();
+//        startTime = mediaPlayer.getCurrentPosition();
 
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         try {
@@ -237,15 +248,16 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
         playBtn.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.player_pause_btn, null));
         playerFilename.setText(fileToPlay.getName());
         playerHeader.setText("Playing");
+
         //Play the audio
         isPlaying = true;
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                stopAudio();
-                playerHeader.setText("Finished");
-            }
-        });
+//        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp) {
+//                stopAudio();
+//                playerHeader.setText("Finished");
+//            }
+//        });
 
         playerSeekbar.setMax(mediaPlayer.getDuration());
 

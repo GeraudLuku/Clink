@@ -135,8 +135,9 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
     }
 
     private void stopRecording() {
-        //Stop Timer, very obvious
+        //Stop Timer, very obvious and also clear it
         timer.stop();
+        timer.setBase(SystemClock.elapsedRealtime());
 
         //Change text on page to file saved
         filenameText.setText("Recording Stopped, File Saved : " + recordFile);
