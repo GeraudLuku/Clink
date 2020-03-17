@@ -1,15 +1,15 @@
 # Clink [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
-<img src="/screenshots/app_icon.png" height="200px"/> <br>
+<img src="/app_icon.png" height="200px"/> <br>
 
 Clink is a minimalist voice recorder app with just the essential features, just enough to be useful.
 
 # Screenshoots
-<img src="/screenshots/main_empty_light.png" height="400px"/> <img src="/screenshots/main_empty_dark.png" height="400px"/>
-<img src="/screenshots/main_full_light.png" height="400px"/><img src="/screenshots/main_full_dark.png" height="400px"/>
+<img src="/screen_1.png" height="400px"/> <img src="/screen_2.png" height="400px"/>
+<img src="/screen_3.png" height="400px"/><img src="/screen_4.png" height="400px"/>
 
 # Download
-<a href="https://play.google.com/store/apps/details?id=com.avjindersinghsekhon.minimaltodo&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-AC-global-none-all-co-pr-py-PartBadges-Oct1515-1">
+<a href="https://play.google.com/store/apps>
 <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" height="50px"/></a>
 
 ## Contributing
