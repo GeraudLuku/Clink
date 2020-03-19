@@ -1,4 +1,4 @@
-package com.geraud.audiorecorder;
+package com.geraud.audiorecorder.Features;
 
 
 import android.Manifest;
@@ -23,6 +23,9 @@ import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.geraud.audiorecorder.R;
+import com.geraud.audiorecorder.Dialogs.SaveNoteDailog;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,7 +35,7 @@ import java.util.Locale;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecordFragment extends Fragment implements View.OnClickListener {
+public class RecordFragment extends Fragment implements View.OnClickListener, SaveNoteDailog.SaveNoteDailogListener {
 
     private NavController navController;
 
@@ -139,22 +142,20 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
         timer.stop();
         timer.setBase(SystemClock.elapsedRealtime());
 
-        //Change text on page to file saved
-        filenameText.setText("Recording Stopped, File Saved : " + recordFile);
+        //show alert dialog
+        SaveNoteDailog saveNoteDailog = new SaveNoteDailog();
+        saveNoteDailog.show(getParentFragmentManager(),"SAVE_NOTE_DIALOG");
 
-        //Stop media recorder and set it to null for further use to record new audio
-        mediaRecorder.stop();
-        mediaRecorder.release();
-        mediaRecorder = null;
     }
 
+    private String recordPath;
     private void startRecording() {
         //Start timer from 0
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
 
         //Get app external directory path
-        String recordPath = getActivity().getExternalFilesDir("/").getAbsolutePath();
+        recordPath = getActivity().getExternalFilesDir("/").getAbsolutePath();
 
         //Get current date and time
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.CANADA);
@@ -200,5 +201,19 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
         if(isRecording){
             stopRecording();
         }
+    }
+
+    @Override
+    public void saveNote(String title, String description) {
+
+        //Change text on page to file saved
+        filenameText.setText("Recording Stopped, File Saved : " + title);
+
+        //Stop media recorder and set it to null for further use to record new audio
+        mediaRecorder.stop();
+        mediaRecorder.release();
+        mediaRecorder = null;
+
+        //write note file to the database .......  ND path = recordPath + recordFile
     }
 }

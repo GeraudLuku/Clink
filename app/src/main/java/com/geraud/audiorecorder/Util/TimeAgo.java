@@ -1,4 +1,4 @@
-package com.geraud.audiorecorder;
+package com.geraud.audiorecorder.Util;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
