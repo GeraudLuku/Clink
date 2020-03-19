@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Features.AudioListFragment"
     android:background="@android:color/white"
-    >
+    tools:context=".Features.AudioListFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorAccent"
+        android:elevation="4dp"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat"
+        app:title="Contacts"
+        app:titleTextColor="#ffffff" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/audio_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="bottom"
+        app:layout_anchor="@+id/toolbar"
+        app:layout_anchorGravity="bottom" />
 
     <include layout="@layout/player_sheet" />
 

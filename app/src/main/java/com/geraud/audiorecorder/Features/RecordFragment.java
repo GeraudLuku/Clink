@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -23,8 +24,10 @@ import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.geraud.audiorecorder.Database.VoiceNote;
 import com.geraud.audiorecorder.R;
 import com.geraud.audiorecorder.Dialogs.SaveNoteDailog;
+import com.geraud.audiorecorder.Repository.VoiceNoteViewModel;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -53,6 +56,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
 
     private Chronometer timer;
 
+    private VoiceNoteViewModel mVoiceNoteViewModel;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -69,6 +73,9 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //attach to view model
+        mVoiceNoteViewModel = new ViewModelProvider(getActivity()).get(VoiceNoteViewModel.class);
 
         //Intitialize Variables
         navController = Navigation.findNavController(view);
@@ -90,14 +97,14 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
     @Override
     public void onClick(View v) {
         /*  Check, which button is pressed and do the task accordingly
-        */
+         */
         switch (v.getId()) {
             case R.id.record_list_btn:
                 /*
                 Navigation Controller
                 Part of Android Jetpack, used for navigation between both fragments
                  */
-                if(isRecording){
+                if (isRecording) {
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                     alertDialog.setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
                         @Override
@@ -116,7 +123,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
                 break;
 
             case R.id.record_btn:
-                if(isRecording) {
+                if (isRecording) {
                     // Change button image and set Recording state to false
                     recordBtn.setImageDrawable(getResources().getDrawable(R.drawable.record_btn_stopped, null));
                     //Stop Recording
@@ -124,7 +131,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
                     isRecording = false;
                 } else {
                     //Check permission to record audio
-                    if(checkPermissions()) {
+                    if (checkPermissions()) {
                         //Start Recording
                         startRecording();
 
@@ -144,11 +151,12 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
 
         //show alert dialog
         SaveNoteDailog saveNoteDailog = new SaveNoteDailog();
-        saveNoteDailog.show(getParentFragmentManager(),"SAVE_NOTE_DIALOG");
+        saveNoteDailog.show(getParentFragmentManager(), "SAVE_NOTE_DIALOG");
 
     }
 
     private String recordPath;
+
     private void startRecording() {
         //Start timer from 0
         timer.setBase(SystemClock.elapsedRealtime());
@@ -198,7 +206,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
     @Override
     public void onStop() {
         super.onStop();
-        if(isRecording){
+        if (isRecording) {
             stopRecording();
         }
     }
@@ -215,5 +223,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
         mediaRecorder = null;
 
         //write note file to the database .......  ND path = recordPath + recordFile
+        String path = recordPath + "/" + recordFile;
+        mVoiceNoteViewModel.insert(new VoiceNote(title,description,path));
     }
 }

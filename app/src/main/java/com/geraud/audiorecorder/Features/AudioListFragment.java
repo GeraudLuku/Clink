@@ -8,6 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,11 +23,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.geraud.audiorecorder.Adapter.AudioListAdapter;
+import com.geraud.audiorecorder.Database.VoiceNote;
 import com.geraud.audiorecorder.R;
+import com.geraud.audiorecorder.Repository.VoiceNoteViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -38,6 +44,8 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
     private RecyclerView audioList;
     private File[] allFiles;
 
+    private VoiceNoteViewModel mVoiceNoteViewModel;
+
     private AudioListAdapter audioListAdapter;
 
     private MediaPlayer mediaPlayer;
@@ -50,20 +58,11 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
     private TextView playerHeader;
     private TextView playerFilename;
 
-    //forward and backward button
-    private ImageButton forwardBtn;
-    private ImageButton backwardBtn;
-
     private SeekBar playerSeekbar;
     private Handler seekbarHandler;
     private Runnable updateSeekbar;
 
-    //extras
-    private double startTime = 0;
-    private double finalTime = 0;
 
-    private int forwardTime = 5000;
-    private int backwardTime = 5000;
 
     public AudioListFragment() {
         // Required empty public constructor
@@ -79,6 +78,15 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //attach to view model
+        mVoiceNoteViewModel = new ViewModelProvider(getActivity()).get(VoiceNoteViewModel.class);
+        mVoiceNoteViewModel.getAllVoiceNotes().observe(getViewLifecycleOwner(), new Observer<List<VoiceNote>>() {
+            @Override
+            public void onChanged(List<VoiceNote> voiceNotes) {
+                //update reycler view
+            }
+        });
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -213,7 +221,6 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
 
     private void resumeAudio() {
         mediaPlayer.start();
-        startTime = mediaPlayer.getCurrentPosition();
         playBtn.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.player_pause_btn, null));
         isPlaying = true;
 
