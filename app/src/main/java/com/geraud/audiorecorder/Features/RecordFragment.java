@@ -149,6 +149,14 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
         timer.stop();
         timer.setBase(SystemClock.elapsedRealtime());
 
+        //Change text on page to file saved
+        filenameText.setText("Recording Stopped, File Saved : " + recordFile);
+
+        //Stop media recorder and set it to null for further use to record new audio
+        mediaRecorder.stop();
+        mediaRecorder.release();
+        mediaRecorder = null;
+
         //show alert dialog
         SaveNoteDailog saveNoteDailog = new SaveNoteDailog();
         saveNoteDailog.show(getParentFragmentManager(), "SAVE_NOTE_DIALOG");
@@ -213,15 +221,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
 
     @Override
     public void saveNote(String title, String description) {
-
-        //Change text on page to file saved
-        filenameText.setText("Recording Stopped, File Saved : " + title);
-
-        //Stop media recorder and set it to null for further use to record new audio
-        mediaRecorder.stop();
-        mediaRecorder.release();
-        mediaRecorder = null;
-
         //write note file to the database .......  ND path = recordPath + recordFile
         String path = recordPath + "/" + recordFile;
         mVoiceNoteViewModel.insert(new VoiceNote(title,description,path));

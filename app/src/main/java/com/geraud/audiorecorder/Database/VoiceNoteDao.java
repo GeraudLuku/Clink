@@ -20,6 +20,6 @@ public interface VoiceNoteDao {
     @Query("DELETE  FROM notes_table")
     void deleteAllNotes();
 
-    @Query("SELECT * FROM notes_table ORDER BY title DESC")
+    @Query("SELECT * FROM notes_table ORDER BY id DESC")
     LiveData<List<VoiceNote>> getAllNotes();
 }

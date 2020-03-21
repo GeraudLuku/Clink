@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp">
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="16dp">
 
     <ImageView
         android:id="@+id/list_image_view"
@@ -28,6 +29,7 @@
         android:text="Filename"
         android:textColor="@color/colorDarkBlue"
         android:textSize="16sp"
+        android:ellipsize="end"
         app:layout_constraintStart_toEndOf="@+id/list_image_view"
         app:layout_constraintTop_toTopOf="@+id/list_image_view" />
 
