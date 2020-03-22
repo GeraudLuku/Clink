@@ -1,22 +1,21 @@
 package com.geraud.audiorecorder.Database;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "notes_table")
 public class VoiceNote {
 
     @PrimaryKey(autoGenerate = true)
-    private String id;
+    private int id;
 
     private String title;
+
     private String description;
+
     private String path;
 
-    //empty constructor
-    public VoiceNote(){
-
-    }
 
     public VoiceNote(String title, String description, String path) {
         this.title = title;
@@ -24,11 +23,11 @@ public class VoiceNote {
         this.path = path;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

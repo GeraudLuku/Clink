@@ -13,7 +13,7 @@ import androidx.lifecycle.LiveData;
 public class VoiceNoteViewModel extends AndroidViewModel {
 
     private VoiceNoteRepository noteRepository;
-    private LiveData<List<VoiceNote>> allVoiceNotes;
+    private LiveData<List<VoiceNote>> allVoiceNotes ;
 
     public VoiceNoteViewModel(@NonNull Application application) {
         super(application);

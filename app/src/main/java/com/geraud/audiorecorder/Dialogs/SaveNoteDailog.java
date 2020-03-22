@@ -13,9 +13,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.DialogFragment;
 
-public class SaveNoteDailog extends AppCompatDialogFragment {
+public class SaveNoteDailog extends DialogFragment {
 
     private TextInputEditText mTitleEditTxt, mDescriptionEditTxt;
 
@@ -24,10 +24,13 @@ public class SaveNoteDailog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_save_dailog, null);
+
+        mTitleEditTxt = view.findViewById(R.id.title);
+        mDescriptionEditTxt = view.findViewById(R.id.note);
 
         builder.setView(view)
                 .setTitle("Voice Note Created")
@@ -48,8 +51,6 @@ public class SaveNoteDailog extends AppCompatDialogFragment {
                     }
                 });
 
-        mTitleEditTxt = view.findViewById(R.id.title);
-        mDescriptionEditTxt = view.findViewById(R.id.note);
 
 
         return builder.create();

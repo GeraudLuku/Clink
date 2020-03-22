@@ -2,7 +2,6 @@ package com.geraud.audiorecorder.Features;
 
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
@@ -10,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -38,7 +39,7 @@ import java.util.Locale;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecordFragment extends Fragment implements View.OnClickListener, SaveNoteDailog.SaveNoteDailogListener {
+public class RecordFragment extends Fragment implements View.OnClickListener {
 
     private NavController navController;
 
@@ -158,8 +159,49 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
         mediaRecorder = null;
 
         //show alert dialog
-        SaveNoteDailog saveNoteDailog = new SaveNoteDailog();
-        saveNoteDailog.show(getParentFragmentManager(), "SAVE_NOTE_DIALOG");
+//        SaveNoteDailog saveNoteDailog = new SaveNoteDailog();
+//        saveNoteDailog.show(getChildFragmentManager(), "SAVE_NOTE_DIALOG");
+
+
+        //custom alert dailog
+        // create an alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Voice Note Created")
+                .setCancelable(false);
+
+        // set the custom layout
+        View customLayout = getLayoutInflater().inflate(R.layout.layout_save_dailog, null);
+        builder.setView(customLayout);
+
+        //get the views
+        final EditText title = customLayout.findViewById(R.id.title);
+        final EditText description = customLayout.findViewById(R.id.note);
+
+        // add a button
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // store note if fields are not empty
+                //get tittle and description text
+                if (title.getText().toString().matches("") || description.getText().toString().matches("")) {
+                    title.setError("Fill all fields");
+                } else {
+                    //save note
+                    //write note file to the database .......  ND path = recordPath + recordFile
+
+                    String tit = title.getText().toString();
+                    String desc = description.getText().toString();
+
+                    String path = recordPath + "/" + recordFile;
+                    mVoiceNoteViewModel.insert(new VoiceNote(tit, desc, path));
+                }
+
+            }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
     }
 
@@ -219,10 +261,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Sa
         }
     }
 
-    @Override
-    public void saveNote(String title, String description) {
-        //write note file to the database .......  ND path = recordPath + recordFile
-        String path = recordPath + "/" + recordFile;
-        mVoiceNoteViewModel.insert(new VoiceNote(title,description,path));
-    }
+//    @Override
+//    public void saveNote(String title, String description) {
+//        //write note file to the database .......  ND path = recordPath + recordFile
+//        String path = recordPath + "/" + recordFile;
+//        mVoiceNoteViewModel.insert(new VoiceNote(title, description, path));
+//    }
 }

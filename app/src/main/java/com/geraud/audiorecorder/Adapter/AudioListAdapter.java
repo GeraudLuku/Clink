@@ -23,16 +23,14 @@ import java.util.List;
 
 public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.AudioViewHolder> implements Filterable {
 
-    private List<VoiceNote> voiceNoteList;
-    private List<VoiceNote> voiceNoteListFiltered;
+    private List<VoiceNote> voiceNoteList = new ArrayList<>();
+    private List<VoiceNote> voiceNoteListFiltered = new ArrayList<>();
     private TimeAgo timeAgo;
 
     private onItemListClick onItemListClick;
 
-    public AudioListAdapter(onItemListClick onItemListClick, List<VoiceNote> voiceNoteList) {
+    public AudioListAdapter(onItemListClick onItemListClick) {
         this.onItemListClick = onItemListClick;
-        this.voiceNoteList = voiceNoteList;
-        this.voiceNoteListFiltered = voiceNoteList;
     }
 
     @NonNull
@@ -60,6 +58,8 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
 
         holder.list_title.setText(voiceNote.getTitle());
         holder.list_date.setText(timeAgo.getTimeAgo(audioFile.lastModified()));
+
+        holder.list_desc.setText(voiceNote.getDescription());
     }
 
     @Override
@@ -67,11 +67,18 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
         return voiceNoteListFiltered.size();
     }
 
+    public void setNotes(List<VoiceNote> notes) {
+        this.voiceNoteList = notes;
+        this.voiceNoteListFiltered = notes;
+        notifyDataSetChanged();
+    }
+
     public class AudioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView list_image;
         private TextView list_title;
         private TextView list_date;
+        private TextView list_desc;
 
         public AudioViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +86,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
             list_image = itemView.findViewById(R.id.list_image_view);
             list_title = itemView.findViewById(R.id.list_title);
             list_date = itemView.findViewById(R.id.list_date);
+            list_desc = itemView.findViewById(R.id.list_desc);
 
             itemView.setOnClickListener(this);
 

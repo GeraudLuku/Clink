@@ -9,7 +9,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {VoiceNote.class}, version = 1)
+@Database(entities = VoiceNote.class, version = 1)
 public abstract class VoiceNoteDatabase extends RoomDatabase {
 
     private static VoiceNoteDatabase instance;
@@ -34,13 +34,13 @@ public abstract class VoiceNoteDatabase extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            Log.d(getClass().getSimpleName(), "Database created");
+            Log.d("ROOM", "Database created");
         }
 
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
-            Log.d(getClass().getSimpleName(), "Database opened");
+            Log.d("ROOM", "Database opened");
         }
     };
 
