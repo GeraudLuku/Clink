@@ -16,6 +16,9 @@ Clink is a minimalist voice recorder app with just the essential features, just 
 ## Contributing
 Looking to contribute something to Clink? [Here's how you can help](/Contributing.md).
 
+## Shout-outs
+[Geraud Luku](https://github.com/GeraudLuku).
+
 ### Todos
 
  - Write MORE Tests
