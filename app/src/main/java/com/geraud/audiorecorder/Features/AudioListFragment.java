@@ -3,7 +3,6 @@ package com.geraud.audiorecorder.Features;
 
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -20,9 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -43,8 +40,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.geraud.audiorecorder.Adapter.AudioListAdapter;
-import com.geraud.audiorecorder.Database.VoiceNote;
 import com.geraud.audiorecorder.R;
+import com.geraud.audiorecorder.Database.VoiceNote;
 import com.geraud.audiorecorder.Repository.VoiceNoteViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -319,9 +316,9 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
         fileToPlay = new File(Uri.parse(voiceNote.getPath()).getPath());
         if (isPlaying) {
             stopAudio();
-            playAudio(fileToPlay);
+            playAudio(fileToPlay,voiceNote);
         } else {
-            playAudio(fileToPlay);
+            playAudio(fileToPlay,voiceNote);
         }
     }
 
@@ -351,7 +348,7 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
         seekbarHandler.removeCallbacks(updateSeekbar);
     }
 
-    private void playAudio(File fileToPlay) {
+    private void playAudio(File fileToPlay, VoiceNote voiceNote) {
 
 //        mediaPlayer = new MediaPlayer();
 
@@ -367,7 +364,7 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
             e.printStackTrace();
         }
         playBtn.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.player_pause_btn, null));
-        playerFilename.setText(fileToPlay.getName());
+        playerFilename.setText(voiceNote.getTitle());
         playerHeader.setText("Playing");
 
         //Play the audio
