@@ -26,6 +26,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import es.dmoral.toasty.Toasty;
 
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -38,11 +39,13 @@ import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.geraud.audiorecorder.Adapter.AudioListAdapter;
 import com.geraud.audiorecorder.R;
 import com.geraud.audiorecorder.Database.VoiceNote;
 import com.geraud.audiorecorder.Repository.VoiceNoteViewModel;
+import com.geraud.audiorecorder.Util.CustomMediaPlayer;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.File;
@@ -59,9 +62,8 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
 
     private AudioListAdapter audioListAdapter;
     private RecyclerView audioList;
-    private List<VoiceNote> voiceNoteList;
 
-    private MediaPlayer mediaPlayer;
+    private CustomMediaPlayer mediaPlayer;
     private boolean isPlaying = false;
 
     private File fileToPlay = null;
@@ -101,7 +103,7 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
         super.onViewCreated(view, savedInstanceState);
 
 
-        mediaPlayer = new MediaPlayer();
+        mediaPlayer = new CustomMediaPlayer(); //using a custom media player class
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -136,83 +138,6 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
 
             }
         });
-
-        //swipe functions
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
-
-                //swipe left delete white swipe right show info of note
-                if (direction == ItemTouchHelper.LEFT) {
-                    //pause the audio playing
-                    if (isPlaying)
-                        stopAudio();
-
-                    //delete note
-                    new AlertDialog.Builder(view.getContext())
-                            .setTitle(audioListAdapter.getNoteAt(viewHolder.getAdapterPosition()).getTitle())
-                            .setMessage("Are you sure you want to delete this note?")
-                            .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    //stop the audio
-                                    mVoiceNoteViewModel.delete(audioListAdapter.getNoteAt(viewHolder.getAdapterPosition()));
-                                    audioListAdapter.removeItem(viewHolder.getAdapterPosition());
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    //do nothing
-                                }
-                            })
-                            .show();
-                }
-//                else {
-//                    //show note information on alert dailog
-//                    new AlertDialog.Builder(view.getContext())
-//                            .setTitle(audioListAdapter.getNoteAt(viewHolder.getAdapterPosition()).getTitle())
-//                            .setMessage(audioListAdapter.getNoteAt(viewHolder.getAdapterPosition()).getDescription())
-//                            .show();
-//                }
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-                Bitmap icon;
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-
-                    View itemView = viewHolder.itemView;
-                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                    float width = height / 3;
-
-//                    if (dX > 0) {
-//                        p.setColor(Color.parseColor("#388E3C"));
-//                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
-//                        c.drawRect(background, p);
-//                        Drawable d = getResources().getDrawable(R.drawable.ic_edit_white, null);
-//                        icon = drawableToBitmap(d);
-//                        RectF icon_dest = new RectF((float) itemView.getLeft() + width, (float) itemView.getTop() + width, (float) itemView.getLeft() + 2 * width, (float) itemView.getBottom() - width);
-//                        c.drawBitmap(icon, null, icon_dest, p);
-//                    } else {
-                        p.setColor(Color.parseColor("#D32F2F"));
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawRect(background, p);
-                        Drawable d = getResources().getDrawable(R.drawable.ic_delete_white, null);
-                        icon = drawableToBitmap(d);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop() + width, (float) itemView.getRight() - width, (float) itemView.getBottom() - width);
-                        c.drawBitmap(icon, null, icon_dest, p);
-//                    }
-                }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        }).attachToRecyclerView(audioList);
 
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -315,11 +240,45 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
     public void onClickListener(VoiceNote voiceNote, int position) {
         fileToPlay = new File(Uri.parse(voiceNote.getPath()).getPath());
         if (isPlaying) {
-            stopAudio();
-            playAudio(fileToPlay,voiceNote);
+            if (mediaPlayer.getDataSource() == fileToPlay.getAbsolutePath()) {
+                //if its the same file yu are trying to play
+                mediaPlayer.start();
+            } else {
+                stopAudio();
+                playAudio(fileToPlay, voiceNote);
+            }
         } else {
-            playAudio(fileToPlay,voiceNote);
+            playAudio(fileToPlay, voiceNote);
         }
+    }
+
+    @Override
+    public void deleteNote(final VoiceNote voiceNote, final int position) {
+        if (isPlaying)
+            stopAudio();
+
+        //delete note
+        new AlertDialog.Builder(getContext())
+                .setTitle(voiceNote.getTitle())
+                .setMessage("Are you sure you want to delete this note?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //stop the audio
+                        mVoiceNoteViewModel.delete(voiceNote);
+                        audioListAdapter.removeItem(position);
+
+                        //show delete toast
+                        Toasty.error(getContext(), "Voice note deleted", Toast.LENGTH_SHORT, true).show();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //do nothing
+                    }
+                })
+                .show();
     }
 
     private void pauseAudio() {
@@ -357,6 +316,7 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
 
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         try {
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(fileToPlay.getAbsolutePath());
             mediaPlayer.prepare();
             mediaPlayer.start();
@@ -402,20 +362,4 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
             stopAudio();
         }
     }
-
-
-    public static Bitmap drawableToBitmap(Drawable drawable) {
-
-        if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable) drawable).getBitmap();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
-
 }

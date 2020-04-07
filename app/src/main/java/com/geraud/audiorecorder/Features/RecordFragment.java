@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import es.dmoral.toasty.Toasty;
 
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.geraud.audiorecorder.Database.VoiceNote;
 import com.geraud.audiorecorder.R;
@@ -126,7 +128,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
             case R.id.record_btn:
                 if (isRecording) {
                     // Change button image and set Recording state to false
-                    recordBtn.setImageDrawable(getResources().getDrawable(R.drawable.record_btn_stopped, null));
+                    recordBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_started, null));
                     //Stop Recording
                     stopRecording();
                     isRecording = false;
@@ -137,7 +139,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
                         startRecording();
 
                         // Change button image and set Recording state to false
-                        recordBtn.setImageDrawable(getResources().getDrawable(R.drawable.record_btn_recording, null));
+                        recordBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_stopped, null));
                         isRecording = true;
                     }
                 }
@@ -194,6 +196,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
 
                     String path = recordPath + "/" + recordFile;
                     mVoiceNoteViewModel.insert(new VoiceNote(tit, desc, path));
+
+                    //display success toast
+                    Toasty.custom(getContext(), "Successfully Created Voice Note : " + tit + "!", R.drawable.ic_done, R.color.colorPrimaryDark, Toast.LENGTH_SHORT, true,
+                            true).show();
                 }
 
             }

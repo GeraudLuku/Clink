@@ -75,7 +75,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
 
     public class AudioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView list_image;
+        private ImageView delete_note;
         private TextView list_title;
         private TextView list_date;
         private TextView list_desc;
@@ -83,12 +83,20 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
         public AudioViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            list_image = itemView.findViewById(R.id.list_image_view);
+            delete_note = itemView.findViewById(R.id.delete_note);
             list_title = itemView.findViewById(R.id.list_title);
             list_date = itemView.findViewById(R.id.list_date);
             list_desc = itemView.findViewById(R.id.list_desc);
 
             itemView.setOnClickListener(this);
+
+            delete_note.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //delete note
+                    onItemListClick.deleteNote(voiceNoteListFiltered.get(getAdapterPosition()), getAdapterPosition());
+                }
+            });
 
         }
 
@@ -110,6 +118,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
 
     public interface onItemListClick {
         void onClickListener(VoiceNote voiceNote, int position);
+        void deleteNote(VoiceNote voiceNote, int position);
     }
 
     @Override
