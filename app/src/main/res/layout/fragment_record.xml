@@ -56,7 +56,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_mic_started"
+        android:src="@drawable/ic_mic_stopped"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

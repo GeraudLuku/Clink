@@ -128,7 +128,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
             case R.id.record_btn:
                 if (isRecording) {
                     // Change button image and set Recording state to false
-                    recordBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_started, null));
+                    recordBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_stopped, null));
                     //Stop Recording
                     stopRecording();
                     isRecording = false;
@@ -139,7 +139,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
                         startRecording();
 
                         // Change button image and set Recording state to false
-                        recordBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_stopped, null));
+                        recordBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_started, null));
                         isRecording = true;
                     }
                 }
@@ -219,7 +219,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
         timer.start();
 
         //Get app external directory path
-        recordPath = getActivity().getExternalFilesDir("/").getAbsolutePath();
+        recordPath = getActivity().getExternalFilesDir("/mnt/sdcard/").getAbsolutePath();
 
         //Get current date and time
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.CANADA);
